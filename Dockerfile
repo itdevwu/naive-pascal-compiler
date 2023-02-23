@@ -4,8 +4,6 @@ FROM ubuntu:22.04
 
 ENV XMAKE_ROOT=y
 
-COPY ./googletest/ /root/googletest/
-
 COPY ./pac.lua /root/.xmake/
 
 RUN apt update \
@@ -17,12 +15,14 @@ RUN apt update \
     && apt dist-upgrade -y \
     && cd ~ \
     # && git clone https://github.com/google/googletest.git \
+    && git clone https://hub.fastgit.xyz/google/googletest.git \
     && cd googletest \
     && mkdir build \
     && cd build \
     && cmake -DCMAKE_CXX_FLAGS='-D_GLIBCXX_USE_CXX11_ABI=0' .. \
     && make \
     && make install \
-    && pip install conan
+    && pip install conan antlr4-tools \
+    && xrepo install -y conan::antlr4-cppruntime/4.11.1
 
 WORKDIR /root

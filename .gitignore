@@ -2,3 +2,5 @@
 .vscode
 .git
 .xmake
+build
+.cache
