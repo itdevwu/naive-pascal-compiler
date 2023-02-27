@@ -5,10 +5,10 @@ npc is a compiler for the Pascal programming language, written in C++ as a cours
 # TODO
 
 - [ ] CLI
-- [ ] Frontend
-    - [ ] Lexer
-    - [ ] Parser
-    - [ ] AST interfaces
+- [x] Frontend
+    - [x] Lexer
+    - [x] Parser
+    - [x] AST interfaces
 - [ ] Backend
     - [ ] LLVM IR translator
     - [ ] LLVM controller
