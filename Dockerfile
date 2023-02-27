@@ -22,7 +22,7 @@ RUN apt update \
     && cmake -DCMAKE_CXX_FLAGS='-D_GLIBCXX_USE_CXX11_ABI=0' .. \
     && make \
     && make install \
-    && pip install conan antlr4-tools \
+    && pip install conan==1.54.0 antlr4-tools==0.1 \
     && xrepo install -y conan::antlr4-cppruntime/4.11.1
 
 WORKDIR /root
