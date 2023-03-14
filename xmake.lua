@@ -19,5 +19,5 @@ target("npc")
     add_deps("pascalast")
     set_kind("binary")
     add_headerfiles("npc/ast/*.hpp")
-    add_files("npc/*.cpp")
+    add_files("npc/*.cpp|example.cpp") -- 排除 example.cpp
     set_rundir("$(curdir)")
