@@ -1,4 +1,4 @@
-Program test_wrint_and_read;
+Program test_wrintReadArray;
 
 Var 
   intVar: integer;
