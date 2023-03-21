@@ -15,8 +15,8 @@ See [naive-pascal-compiler 文档索引表](./docs/README.md)
     - [x] AST interfaces
 - [ ] Backend
     - [ ] LLVM IR translator
-    - [ ] LLVM controller
-- [ ] Tests
+    - [X] LLVM controller
+- [X] Tests (partly)
 
 ## Copyright
 
