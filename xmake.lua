@@ -21,3 +21,9 @@ target("npc")
     add_headerfiles("npc/ast/*.hpp")
     add_files("npc/*.cpp|example.cpp") -- 排除 example.cpp
     set_rundir("$(curdir)")
+
+target("llvmctrl")
+    set_kind("binary")
+    add_files("./src/*.cpp")
+    add_includedirs("./include/*.h")
+    add_links("boost_program_options")
