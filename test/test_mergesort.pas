@@ -1,4 +1,4 @@
-program gbpx;
+program test_mergeSort;
 
 const maxn=7;
 type arr=array[1..maxn] of integer;
