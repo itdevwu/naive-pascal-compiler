@@ -11,7 +11,7 @@ RUN apt update \
     && apt-add-repository ppa:fish-shell/release-3 \
     && add-apt-repository ppa:xmake-io/xmake \
     && apt update \
-    && apt install -y fish vim wget curl tldr unzip git gcc g++ xmake cmake build-essential openssl libcurl4-openssl-dev python3 python3-pip \
+    && apt install -y fish vim wget curl tldr unzip git clang xmake cmake build-essential openssl libcurl4-openssl-dev python3 python3-pip \
     && apt dist-upgrade -y \
     && cd ~ \
     # && git clone https://github.com/google/googletest.git \
