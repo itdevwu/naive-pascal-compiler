@@ -1,5 +1,5 @@
 #include "irBuilder.hpp"
-#include <llvm-13/llvm/IR/Value.h>
+#include <llvm/IR/Value.h>
 
 namespace npc::ir
 {

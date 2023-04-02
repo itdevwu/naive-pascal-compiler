@@ -3,7 +3,7 @@
 
 #include "../ast/pascalAst.hpp"
 
-#include <llvm-13/llvm/IR/Value.h>
+#include <llvm/IR/Value.h>
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
