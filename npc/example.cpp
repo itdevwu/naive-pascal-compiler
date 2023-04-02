@@ -1,17 +1,9 @@
-#include "ast/pascalAst.hpp"
-#include <cstdio>
 #include <filesystem>
 
-void dfs(npc::ast::AstNode *node)
-{
-    auto children = node->getChildren();
-    for (auto child : children)
-    {
-        printf("%s:%lu -> %s:%lu\n", node->getRule().c_str(), node->getText().size(),
-               child->is_leaf() ? child->getText().c_str() : child->getRule().c_str(), child->getText().size());
-        dfs(child);
-    }
-}
+#include "./ast/pascalAst.hpp"
+#include "./ir/irBuilder.hpp"
+
+#include <cstdio>
 
 int main(int argc, char *argv[])
 {
@@ -37,5 +29,5 @@ int main(int argc, char *argv[])
     }
 
     auto ast = npc::ast::Ast(ss.str());
-    dfs(ast.tree());
+    auto irBuilder = npc::ir::IRGenerator(&ast);
 }
