@@ -1,3 +1,4 @@
+/*
 #include "irCodegen.hpp"
 
 namespace npc::ir
@@ -38,3 +39,4 @@ llvm::Value *identifierCodegen(ast::AstNode *node, llvm::LLVMContext *context, l
 }
 
 } // namespace npc::ir
+*/

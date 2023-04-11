@@ -1,3 +1,4 @@
+
 #include "ast/pascalAst.hpp"
 #include <cstdio>
 #include <filesystem>
@@ -60,3 +61,4 @@ int main(int argc, char *argv[])
     auto ast = npc::ast::Ast(ss.str());
     dfs(ast.tree());
 }
+

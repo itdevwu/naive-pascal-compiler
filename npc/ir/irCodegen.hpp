@@ -1,3 +1,4 @@
+/*
 #ifndef _IR_EXPRESSION_CODEGEN_HPP_
 #define _IR_EXPRESSION_CODEGEN_HPP_
 
@@ -30,3 +31,4 @@ llvm::Value *identifierCodegen(ast::AstNode *node, llvm::LLVMContext *context, l
 } // namespace npc::ir
 
 #endif // _IR_EXPRESSION_CODEGEN_HPP_
+*/
