@@ -1,8 +1,8 @@
 /**
  * @file      Visitor.h
  * @brief     通过Visitor模式访问语法树
- * @author    Ziheng Mao, Aolun Xie, Kangtong Li, Jianlong Ban, Junhui Li, Yongqi Qiao
- * @date      2022/4/20
+ * @author    Xiyue Zu, Yiran Ren
+ * @date      2023/4/12
  * @copyright GNU General Public License, version 3 (GPL-3.0)
  *
  * 本文件定义了Visitor模式的接口。
