@@ -1,9 +1,5 @@
 #include "Visitor.hpp"
 
-//#include "exceptions/DebugException.h"
-//#include "exceptions/NotImplementedException.h"
-//#include "exceptions/VariableNotFoundException.h"
-//#include "exceptions/ProcedureNotFoundException.h"
 #include "StandardProcedure.hpp"
 
 using namespace antlr4;
