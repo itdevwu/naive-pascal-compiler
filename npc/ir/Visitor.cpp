@@ -4,6 +4,7 @@
 //#include "exceptions/NotImplementedException.h"
 //#include "exceptions/VariableNotFoundException.h"
 //#include "exceptions/ProcedureNotFoundException.h"
+#include "llvm/Support/raw_os_ostream.h"
 #include "StandardProcedure.hpp"
 
 using namespace antlr4;
@@ -38,20 +39,23 @@ void Visitor::visitProgram(pascalParser::ProgramContext *context)
 {
 
     if(context->INTERFACE()){
-        auto functionType = llvm::FunctionType::get(builder.getVoidTy(), {}, false);
+        auto functionType = llvm::FunctionType::get(builder.getInt32Ty(), {}, false);
         auto programName = visitProgramHeading(context->programHeading());
         auto function = llvm::Function::Create(functionType, llvm::GlobalValue::LinkageTypes::ExternalLinkage, "main", module.get());
         visitBlock(context->block(), function, true);
     }
     else{
-        auto functionType = llvm::FunctionType::get(builder.getVoidTy(), {}, false);
+        auto functionType = llvm::FunctionType::get(builder.getInt32Ty(), {}, false);
+        //auto functionType = llvm::FunctionType::get(builder.getVoidTy(), {}, false);
         auto programName = visitProgramHeading(context->programHeading());
         auto function = llvm::Function::Create(functionType, llvm::GlobalValue::LinkageTypes::ExternalLinkage, "main", module.get());
 
         scopes.push_back(Scope());
         scopes.back().setVariable(programName, function);
         visitBlock(context->block(), function, true);
-        builder.CreateRetVoid();
+        llvm::Value* returnValue = builder.getInt32(0);
+        builder.CreateRet(returnValue);
+        //builder.CreateRetVoid();
     }
 }
 
@@ -76,7 +80,6 @@ std::string Visitor::visitIdentifier(pascalParser::IdentifierContext *context)
 
 void Visitor::visitBlock(pascalParser::BlockContext *context, llvm::Function *function, bool isGlobal)
 {
-
     int i=0;
     auto block = llvm::BasicBlock::Create(*llvm_context, "entry", function);
 
@@ -88,7 +91,7 @@ void Visitor::visitBlock(pascalParser::BlockContext *context, llvm::Function *fu
         }
         for (i=0;i<context->variableDeclarationPart().size();i++)
         {
-            //visitVariableDeclarationPart(context->variableDeclarationPart(i));
+            visitVariableDeclarationPart(context->variableDeclarationPart(i), isGlobal);
         }
         for (i=0;i<context->typeDefinitionPart().size();i++)
         {
@@ -116,7 +119,7 @@ void Visitor::visitBlock(pascalParser::BlockContext *context, llvm::Function *fu
         }
         for (const auto &variableDeclarePartContext : context->variableDeclarationPart())
         {
-            visitVariableDeclarationPart(variableDeclarePartContext);
+            visitVariableDeclarationPart(variableDeclarePartContext, isGlobal);
         }
         for (const auto &typeDefinitionPartContext : context->typeDefinitionPart())
         {
@@ -352,6 +355,7 @@ void Visitor::visitVariableDeclarationPart(pascalParser::VariableDeclarationPart
 {
     for (const auto &vDeclarationContext : context->variableDeclaration())
     {
+        //std::cout << isGlobal;
         visitVariableDeclaration(vDeclarationContext, isGlobal);
     }
 }
@@ -376,6 +380,7 @@ llvm::Type *Visitor::visitVariableDeclaration(pascalParser::VariableDeclarationC
             }
             else
             {
+                //std::cout << isGlobal;
                 auto addr = builder.CreateAlloca(type, nullptr);
                 builder.CreateStore(llvm::UndefValue::get(type), addr);
                 scopes.back().setVariable(id, addr);
@@ -390,6 +395,7 @@ llvm::Type *Visitor::visitVariableDeclaration(pascalParser::VariableDeclarationC
         {
             if (isGlobal)
             {
+                //std::cout << isGlobal;
                 module->getOrInsertGlobal(id, type);
                 auto addr = module->getNamedGlobal(id);
                 addr->setInitializer(llvm::UndefValue::get(type));
@@ -952,10 +958,12 @@ void Visitor::visitFormalParameterSection(pascalParser::FormalParameterSectionCo
 {
     if (auto parameterGroupContext = context->parameterGroup())
     {
+        //llvm::outs() << "Hello World!222 (version "  << ")\n";
         visitParameterGroup(parameterGroupContext, ParaTypes, false);
     }
     else if (context->VAR())
     {
+        //llvm::outs() << "Hello World!111 (version "  << ")\n";
         visitParameterGroup(context->parameterGroup(), ParaTypes, true);
     }
     else{
@@ -1038,6 +1046,14 @@ void Visitor::visitProcedureStatement(pascalParser::ProcedureStatementContext *c
     {
         auto stdProcedure = StandardProcedure::prototypeMap[identifier](module.get());
         auto paraList = visitParameterList(context->parameterList(), true);
+
+        /*
+        llvm::raw_os_ostream out(std::cout);
+        for (auto para : paraList) {
+            para->print(out);
+        }
+        */
+
         StandardProcedure::argsConstructorMap[identifier](&builder, paraList);
         if ("readln" == identifier)
         {
@@ -1477,7 +1493,19 @@ llvm::Value *Visitor::visitSignedFactor(pascalParser::SignedFactorContext *conte
 
 llvm::Value *Visitor::visitFactor(pascalParser::FactorContext *context, int flag, float flag_fp, llvm::ConstantInt* flag_v, llvm::Constant* flag_v_fp) {
     if(auto variableContext = context->variable()) {
-        auto value = visitVariable(variableContext);
+        llvm::Value * value;
+        auto varName = visitIdentifier(variableContext->identifier(0));
+        auto varAddr = visitVariable(variableContext);
+
+        // 为readln构造参数时需要传递地址而非值
+        if (readlnArgFlag == true && arrayIndexFlag == false)
+        {
+             value = varAddr;
+        }
+        else
+        {
+            value =  builder.CreateLoad(varAddr->getType()->getPointerElementType(), varAddr);
+        }
         if(flag == -1) {
             if(value -> getType() -> isFloatingPointTy()) {
                 return builder.CreateFMul(flag_v_fp, value);
@@ -1769,7 +1797,6 @@ void Visitor::visitWhileStatement(pascalParser::WhileStatementContext *context, 
         
     else if (auto structuredStatementContext = context->statement()->unlabelledStatement()->structuredStatement()){
         visitStructuredStatement(structuredStatementContext, function);
-        llvm::outs() << "Hello World! (version "  << ")\n";
     }
         
     else{}
@@ -1783,9 +1810,9 @@ void Visitor::visitWhileStatement(pascalParser::WhileStatementContext *context, 
 
 void Visitor::visitStatements(pascalParser::StatementsContext *context, llvm::Function *function)
 {
-    for (int i=0;i<context->statement().size();i++)
+    for (const auto &statementContext : context->statement())
     {
-        visitStatement(context->statement(i), function);
+        visitStatement(statementContext, function);
     }
 }
 
