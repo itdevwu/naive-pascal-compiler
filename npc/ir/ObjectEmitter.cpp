@@ -12,14 +12,30 @@ using namespace Pascal;
 
 void ObjectEmitter::emit(const std::unique_ptr<llvm::Module> &module, const std::string &filename, std::string &error)
 {
-    std::error_code ec;
-    llvm::raw_fd_ostream dest(filename, ec, llvm::sys::fs::CD_CreateAlways, llvm::sys::fs::FA_Write, llvm::sys::fs::OF_None);
+    /*
     if (ec)
     {
         error = "Could not open file: " + ec.message();
         return;
     }
-
-    llvm::WriteBitcodeToFile(*module, dest);
+    */
+    std::error_code ec;
+    llvm::raw_fd_ostream dest(filename, ec, llvm::sys::fs::CD_CreateAlways, llvm::sys::fs::FA_Write, llvm::sys::fs::OF_None);
+    module->print(dest, nullptr);
+    //llvm::WriteBitcodeToFile(*module, dest);
     dest.flush();
+
+/*
+    int result = system("./qsort.sh");
+
+        // 检查执行结果
+        if (result == 0) {
+            printf("yeah");
+        } else {
+            // 执行失败
+            // 可以在这里进行错误处理
+        }
+
+
+*/
 }
