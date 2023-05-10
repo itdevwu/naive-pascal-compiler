@@ -2,38 +2,6 @@
 #include <cstdio>
 #include <filesystem>
 
-int tot_nodes = 0;
-
-void dfs(npc::ast::AstNode *node)
-{
-    auto children = node->getChildren();
-    auto cur_node = tot_nodes++;
-    printf("%d\n", cur_node);
-
-    for (auto child : children)
-    {
-        if (child->is_leaf())
-        {
-            printf(
-                "%s_%d -> %s_",
-                node->getRule().c_str(),
-                cur_node,
-                child->getRule().c_str()
-            );
-        }
-        else 
-        {
-            printf(
-                "%s_%d -> %s_",
-                node->getRule().c_str(),
-                cur_node,
-                child->getRule().c_str()
-            );
-        }
-        dfs(child);
-    }
-}
-
 int main(int argc, char *argv[])
 {
     std::stringstream ss;
@@ -58,5 +26,5 @@ int main(int argc, char *argv[])
     }
 
     auto ast = npc::ast::Ast(ss.str());
-    dfs(ast.tree());
+    std::cout << ast.ast_graph();
 }
