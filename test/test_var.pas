@@ -1,10 +1,10 @@
 program TestVariables;
 
 var
-  integerVariable: integer; // 整型变量
-  floatVariable: real; // 浮点型变量
-  booleanVariable: boolean; // 布尔型变量
-  charVariable: char; // 字符型变量
+  integerVariable: integer;
+  floatVariable: real;
+  booleanVariable: boolean;
+  charVariable: char;
 
 begin
   integerVariable := 10;

@@ -1,3 +1,5 @@
+Program test_for; 
+
 Var n: integer;
 Var i: integer;
 Begin

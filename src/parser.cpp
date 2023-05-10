@@ -11,9 +11,14 @@ bpo::variables_map parse_args(int argc, char const *argv[], const bpo::options_d
         //解析命令行输入的参数并存储到vm中 
         bpo::store(bpo::parse_command_line(argc, argv, opts), vm); 
         if (vm.count("help")) { 
+            std::cout << "  ____   _    _  _____  _______   _   _  _____    _____" << std::endl;
+            std::cout << " |  _ \\ | |  | ||  __ \\|__   __| | \\ | ||  __ \\  / ____|" << std::endl;
+            std::cout << " | |_) || |  | || |__) |  | |    |  \\| || |__) || |     " << std::endl;
+            std::cout << " |  _ < | |  | ||  ___/   | |    | . ` ||  ___/ | |     " << std::endl;
+            std::cout << " | |_) || |__| || |       | |    | |\\  || |     | |____ " << std::endl;
+            std::cout << " |____/  \\____/ |_|       |_|    |_| \\_||_|      \\_____|\n";
             std::cout << "This program is a simple IR compiler that can compile a ir source file into an executable file.\n";
             std::cout << "Usage: main [options] -i input-file\n";
-            // std::cout << "Options:\n";
             std::cout << opts << std::endl;
             std::cout << "Examples:\n";
             std::cout << "  main -i hello.ll -o hello -O 2\n";

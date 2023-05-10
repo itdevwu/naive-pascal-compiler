@@ -3,15 +3,12 @@ Program test_wrintReadArray;
 Var 
   intVar: integer;
   realVar: real;
-  a: array[-8..8, -4..4] Of real;
+  a: array[0..4, 0..4] Of real;
 Begin
   {test readln}
-  readln(intVar, realVar, a[-2, -3]);
+  readln(intVar,realVar,a[2, 1]);
   {test writeln}
-  writeln(intVar);
-  writeln(realVar);
-  {test array}
-  writeln(a[-2, -3]);
+  writeln(intVar,realVar,a[2, 1]);
 End.
 
 

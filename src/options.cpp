@@ -13,6 +13,7 @@ bpo::options_description create_options()
         ("output,o", bpo::value<std::string>()->default_value("output.out"), "the file name to be output") 
         ("optimize,O", bpo::value<int>()->default_value(0), "enable optimization at diffrernt level") 
         ("run,r", "run the compiled file") 
+        ("graph,g", "show the graph of AST")
         ("help,h", "help info");
     return opts;
 }

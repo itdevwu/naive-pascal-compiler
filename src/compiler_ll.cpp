@@ -1,8 +1,8 @@
 //定义与执行编译命令相关的函数
-#include "../include/compiler.h"
+#include "../include/compiler_ll.h"
 #include <cstdlib>
 
-bool compile(const std::string& input_file, const std::string& output_file, int opt_level)
+bool compile_ll(const std::string& input_file, const std::string& output_file, int opt_level)
 {
     //构造编译命令
     std::string cmd = "clang " + input_file + " -o ";
