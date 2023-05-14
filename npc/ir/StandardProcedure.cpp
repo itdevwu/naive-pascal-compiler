@@ -4,9 +4,6 @@
 
 #include <llvm/IR/Module.h>
 
-//#include "../exceptions/DebugException.h"
-//#include "../exceptions/NotImplementedException.h"
-
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/Support/raw_os_ostream.h>
 #include <iostream>
@@ -46,14 +43,10 @@ void StandardProcedure::readlnArgsConstructor(llvm::IRBuilder<> *builder, std::v
     {
         auto type = arg->getType();
         llvm::raw_os_ostream out(std::cout);
-        //type->print(out);
         if (type->isIntegerTy())
             formats.push_back("%d");
         else if (type->isDoubleTy())
-        //else if (type->isFloatTy())
             formats.push_back("%f");
-        //else
-            //throw DebugException(NOW_FUNC_NAME + "Unsupported readln Arguments Type!");
     }
     
     
@@ -86,8 +79,6 @@ void StandardProcedure::writelnArgsConstructor(llvm::IRBuilder<> *builder, std::
             formats.push_back("%lf");
         else if (type->isPointerTy())
             formats.push_back("%s");
-        //else
-            //throw DebugException(NOW_FUNC_NAME + "Unsupported writeln Arguments Type!");
     }
     formats.push_back("\n");
 
@@ -95,8 +86,6 @@ void StandardProcedure::writelnArgsConstructor(llvm::IRBuilder<> *builder, std::
     std::ostringstream format;
     std::copy(formats.begin(), formats.end(), std::ostream_iterator<std::string>(format));
     auto formatString = format.str();
-
-    //printf("%s\n", formatString.c_str());
 
     args.insert(args.begin(), builder->CreateGlobalStringPtr(formatString));
     

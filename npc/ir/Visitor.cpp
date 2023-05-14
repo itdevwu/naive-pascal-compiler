@@ -1,9 +1,5 @@
 #include "Visitor.hpp"
 
-//#include "exceptions/DebugException.h"
-//#include "exceptions/NotImplementedException.h"
-//#include "exceptions/VariableNotFoundException.h"
-//#include "exceptions/ProcedureNotFoundException.h"
 #include "llvm/Support/raw_os_ostream.h"
 #include "StandardProcedure.hpp"
 
@@ -46,7 +42,6 @@ void Visitor::visitProgram(pascalParser::ProgramContext *context)
     }
     else{
         auto functionType = llvm::FunctionType::get(builder.getInt32Ty(), {}, false);
-        //auto functionType = llvm::FunctionType::get(builder.getVoidTy(), {}, false);
         auto programName = visitProgramHeading(context->programHeading());
         auto function = llvm::Function::Create(functionType, llvm::GlobalValue::LinkageTypes::ExternalLinkage, "main", module.get());
 
@@ -55,13 +50,11 @@ void Visitor::visitProgram(pascalParser::ProgramContext *context)
         visitBlock(context->block(), function, true);
         llvm::Value* returnValue = builder.getInt32(0);
         builder.CreateRet(returnValue);
-        //builder.CreateRetVoid();
     }
 }
 
 std::string Visitor::visitProgramHeading(pascalParser::ProgramHeadingContext *context)
 {
-    //llvm::outs() << "Hello World! (version "  << ")\n";
     if(context->PROGRAM()){
         return visitIdentifier(context->identifier());
     }
@@ -216,17 +209,6 @@ void Visitor::visitConstant(pascalParser::ConstantContext *context, auto id)
         global->setConstant(true);
 
     }
-/*
-    else if (auto ConstunumberCtx = dynamic_cast<pascalParser::UnsignedNumberContext *>(context->unsignedNumber()))
-    {
-        
-        auto value = visitUnsignedNumber(ConstunumberCtx);
-        module->getOrInsertGlobal(id, value->getType());
-        auto global = module->getNamedGlobal(id);
-        global->setInitializer(value);
-        global->setConstant(true);
-    }
-*/
     else if (context->sign())
     {
         int flag = visitSign(context->sign());
@@ -856,11 +838,6 @@ void Visitor::visitProcedureDeclaration(pascalParser::ProcedureDeclarationContex
     }
     auto functionType = llvm::FunctionType::get(builder.getVoidTy(), ParaTypes, false);
     auto function = llvm::Function::Create(functionType, llvm::Function::ExternalLinkage, identifier.c_str(), module.get());
-    //auto function = llvm::Function::Create(functionType, llvm::Function::ExternalLinkage, llvm::Twine(identifier), module.get());
-    //llvm::outs() << identifier << "\n";
-    //llvm::outs() << "Hello World! (version " << ")\n";
-    //llvm::outs() << "Hello World! (version " << ")\n";
-    // 创建一个基本块用于为参数创建CreateAlloca，CreateLoad语句
     auto block = llvm::BasicBlock::Create(*llvm_context, "Para_Ret", function);
     builder.SetInsertPoint(block);
     
@@ -870,9 +847,7 @@ void Visitor::visitProcedureDeclaration(pascalParser::ProcedureDeclarationContex
     
     for (auto argsItr = function->arg_begin(); argsItr != function->arg_end(); argsItr++)
     {
-        //llvm::Value *
         auto arg = argsItr;
-        // 因为变量表中存的都是value的地址，所以也必须给参数申请地址才能将其存入变量表中
         auto addrArg = builder.CreateAlloca(arg->getType(), nullptr);
         arg->setName(FormalParaIdList[n].c_str());
 
@@ -884,7 +859,6 @@ void Visitor::visitProcedureDeclaration(pascalParser::ProcedureDeclarationContex
     visitBlock(context->block(), function);
     scopes.pop_back();
     
-    // 因为Procedure没有返回值，所以创建空返回语句。
     builder.CreateRetVoid();
     
     
@@ -893,12 +867,9 @@ void Visitor::visitProcedureDeclaration(pascalParser::ProcedureDeclarationContex
 
 void Visitor::visitFunctionDeclaration(pascalParser::FunctionDeclarationContext *context)
 {
-    // 获取identifier，即函数名
     auto identifier = visitIdentifier(context->identifier());
-    // 获取函数返回值类型
     auto simpleType = visitTypeIdentifier(context->resultType()->typeIdentifier(), false);
 
-    // 获取函数参数的类型，默认为空，即没有参数传出。
     llvm::SmallVector<llvm::Type *> ParaTypes;
     if (context->formalParameterList()) // 当函数有参数的时候才获取。
     {
@@ -1048,13 +1019,6 @@ void Visitor::visitProcedureStatement(pascalParser::ProcedureStatementContext *c
         auto stdProcedure = StandardProcedure::prototypeMap[identifier](module.get());
         auto paraList = visitParameterList(context->parameterList(), true);
 
-        /*
-        llvm::raw_os_ostream out(std::cout);
-        for (auto para : paraList) {
-            para->print(out);
-        }
-        */
-
         StandardProcedure::argsConstructorMap[identifier](&builder, paraList);
         if ("readln" == identifier)
         {
@@ -1136,8 +1100,6 @@ llvm::Value *Visitor::visitVariable(pascalParser::VariableContext *context){
         offset = con_0;
         offsetUnit = con_1;
 
-        // offset += ((indexes[j]- ranges[2*j]) * offsetUnit);
-        // offsetUnit *= (ranges[2*j + 1] - ranges[2*j] + 1);
 
         for(int j = indices.size() - 1; j >= 0; j--) {
             //取当前数组索引下限
@@ -1153,20 +1115,13 @@ llvm::Value *Visitor::visitVariable(pascalParser::VariableContext *context){
             
         }
 
-        // readlnArgFlag = true;
         addr = builder.CreateGEP(addr, {con_0, offset});
     }
 
-    //function
     if(auto func = llvm::dyn_cast_or_null<llvm::Function>(addr)) {
         addr = getVariable(varName + "ret");
     }
 
-    //pointer Todo
-    //if(context -> POINTER(0)) {
-      //  readlnArgFlag = true;
-      //  addr = getVariable(varName);
-    //}
     return addr;
 }
 
